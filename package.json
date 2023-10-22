@@ -1,0 +1,33 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Practice MernnStack",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "build": "npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mdadilkhan/TodoApp.git"
+  },
+  "keywords": [
+    "todo",
+    "app",
+    "practice"
+  ],
+  "author": "md adil khan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdadilkhan/TodoApp/issues"
+  },
+  "homepage": "https://github.com/mdadilkhan/TodoApp#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3"
+  }
+}
