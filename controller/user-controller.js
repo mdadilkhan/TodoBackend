@@ -79,7 +79,7 @@ export const signUp = async (req,res)=>{
 
 //this verify token is only for jwt token not for token comming from cookie
 // if you dont want to implement cookie use this jwt authentication only 
-//this is using asunc await 
+//this is using asnc await 
 //   export const verifyToken= async(req,res,next)=>{
 //     const header=req.headers['authorization'];
 //     const token=header.split(" ")[1];

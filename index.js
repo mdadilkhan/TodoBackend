@@ -1,10 +1,10 @@
 import  express from 'express';
-import Router from './routes/route.js'
+import Router from './route/route.js'
 import Connection from './db/db.js'
 import env from 'dotenv'
 import cors from 'cors'
 import bodyParser from 'body-parser';
-import { MongoClient } from 'mongodb';
+
 import cookieParser from 'cookie-parser';
 
 
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 
 
-
+ 
 app.use('/v1',Router);
  
 
@@ -27,8 +27,8 @@ app.use('/v1',Router);
 
 
 
-const PORT=process.env.PORT
-//for atlas connections
+const PORT=process.env.PORT || 5000
+// //for atlas connections
 Connection()
 
 
