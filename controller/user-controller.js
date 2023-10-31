@@ -49,17 +49,16 @@ export const signUp = async (req,res)=>{
     console.log(req.body);
     try {
       let user = await User.findOne({ email: req.body.email });
-      console.log("get user>>",user);
+      // console.log("get user>>",user);
   
       if (!user) {
-        res.status(400).send({ message: 'User does not exist' });
-        return;
+        console.log("inside user");
+        return res.status(400).send({ message: 'User does not exist' });
       }
   
       let isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
       if (!isPasswordCorrect) {
-        res.status(400).send({ message: 'Incorrect Password' });
-        return;
+        return res.status(400).send({ message: 'Incorrect Password' });
       }
   
       const secretKey = process.env.JWT_SECRET;
@@ -77,7 +76,7 @@ export const signUp = async (req,res)=>{
         httpOnly:true,
         sameSite: 'lax'
       })
-      res.status(200).send({ message: "Login Successful", token });
+      return res.status(200).send({ message: "Login Successful", token });
   
     } catch (error) {
       console.log(error);
