@@ -190,17 +190,22 @@ export const verifyToken= async(req,res,next)=>{
     }
   }
 
-  export const getUser=async(req,res,next)=>{
+  export const getUser=async(req,res)=>{
     const userId=req.id;
     let user;
+    console.log("inside get api",userId);
     try {
+      console.log("inside try");
        user = await User.findById(userId,"-password");
        console.log(user); 
+       console.log("inside last try");
     } catch (error) {
+      console.log("inside error");
         return new Error(error)
     } 
 
     if(!user){
+      console.log("inside user check");
         res.status(404).send({message:'user not found'});
     }
     return res.status(200).send({user})
