@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 
 import cookieParser from 'cookie-parser';
 const corsOptions = {
-    origin: 'https://advacnetodoapp.web.app',
+    origin: '*',
     credentials: true,
   };
 
