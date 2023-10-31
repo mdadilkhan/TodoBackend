@@ -71,10 +71,15 @@ export const signUp = async (req,res)=>{
       console.log("added token>>",user);
       await user.save();
       res.cookie(String(user._id),token,{
-        path:'/',
+        // path:'/',
+        // expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        // httpOnly:true,
+        // sameSite: 'lax'
+        path: '/',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-        httpOnly:true,
-        sameSite: 'lax'
+        httpOnly: true,
+        sameSite: 'None',  // Update this line
+        secure: true,      
       })
       return res.status(200).send({ message: "Login Successful", token });
   
