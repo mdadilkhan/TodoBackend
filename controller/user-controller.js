@@ -155,41 +155,80 @@ export const signUp = async (req,res)=>{
   
   
 // this verify jwt token is when toekn comming from cookie
-export const verifyToken= async(req,res,next)=>{
-    const cookies = req.headers.cookie;
-    console.log("cookies",cookies);
-    let token;
-    if(cookies){
-        token=cookies.split("=")[1];
-    }else{
-        return res.status(400).send({message:'cookies not found'});
-    }
+// export const verifyToken= async(req,res,next)=>{
+//     const cookies = req.headers.cookie;
+//     console.log("cookies",cookies);
+//     let token;
+//     if(cookies){
+//         token=cookies.split("=")[1];
+//     }else{
+//         return res.status(400).send({message:'cookies not found'});
+//     }
 
-    console.log("cook>>",cookies);
-    console.log("token>>",token);
+//     console.log("cook>>",cookies);
+//     console.log("token>>",token);
 
-    if(!token){
-        return res.status(400).send({message:'token not found'})
-    }
-    const secretKey = process.env.JWT_SECRET;
-    console.log(secretKey);
+//     if(!token){
+//         return res.status(400).send({message:'token not found'})
+//     }
+//     const secretKey = process.env.JWT_SECRET;
+//     console.log(secretKey);
  
-    try {
-      const user = await jwt.verify(String(token), secretKey);
-      req.id = user.userId;
-      console.log("userID>>>",user.userId);
-      next(); 
-    } catch (error) {
-        // console.log(error);
+//     try {
+//       const user = await jwt.verify(String(token), secretKey);
+//       req.id = user.userId;
+//       console.log("userID>>>",user.userId);
+//       next(); 
+//     } catch (error) {
+//         // console.log(error);
+//       if (error.name === 'TokenExpiredError') {
+//         return res.status(401).send({ message: 'Token expired' });
+//       } else if (error.name === 'JsonWebTokenError') {
+//         return res.status(401).send({ message: 'Invalid token' });
+//       } else {
+//         return res.status(500).send({ message: 'Internal server error' });
+//       } 
+//     }
+//   }
+
+export const verifyToken = (req, res, next) => {
+  const cookies = req.headers.cookie;
+  console.log("cookies", cookies);
+  let token;
+
+  if (cookies) {
+    token = cookies.split("=")[1];
+  } else {
+    return res.status(400).send({ message: 'cookies not found' });
+  }
+
+  console.log("cook>>", cookies);
+  console.log("token>>", token);
+
+  if (!token) {
+    return res.status(400).send({ message: 'token not found' });
+  }
+
+  const secretKey = process.env.JWT_SECRET;
+  console.log(secretKey);
+
+  jwt.verify(String(token), secretKey, (error, user) => {
+    if (error) {
+      // console.log(error);
       if (error.name === 'TokenExpiredError') {
         return res.status(401).send({ message: 'Token expired' });
       } else if (error.name === 'JsonWebTokenError') {
         return res.status(401).send({ message: 'Invalid token' });
       } else {
         return res.status(500).send({ message: 'Internal server error' });
-      } 
+      }
     }
-  }
+
+    req.id = user.userId;
+    console.log("userID>>>", user.userId);
+    next();
+  });
+};
 
   export const getUser=async(req,res)=>{
     const userId=req.id;
