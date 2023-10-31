@@ -53,12 +53,12 @@ export const signUp = async (req,res)=>{
   
       if (!user) {
         console.log("inside user");
-        return res.status(400).send({ message: 'User does not exist' });
+        return res.status(404).send({ message: 'User does not exist' });
       }
   
       let isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
       if (!isPasswordCorrect) {
-        return res.status(400).send({ message: 'Incorrect Password' });
+        return res.status(401).send({ message: 'Incorrect Password' });
       }
   
       const secretKey = process.env.JWT_SECRET;
