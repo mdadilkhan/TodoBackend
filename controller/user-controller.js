@@ -157,6 +157,7 @@ export const signUp = async (req,res)=>{
 // this verify jwt token is when toekn comming from cookie
 export const verifyToken= async(req,res,next)=>{
     const cookies = req.headers.cookie;
+    console.log("cookies",cookies);
     let token;
     if(cookies){
         token=cookies.split("=")[1];
