@@ -12,7 +12,7 @@ env.config()
 const app=express();
 
 app.use(cookieParser())
-app.use(cors({credentials:true, origin:"https://advacnetodoapp.web.app/"}))
+app.use(cors({credentials:true, origin:"*"}))
 app.use(bodyParser.json({extended:true}));
 app.use(bodyParser.urlencoded({extended:true}));
 
