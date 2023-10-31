@@ -63,7 +63,7 @@ export const signUp = async (req,res)=>{
   
       const secretKey = process.env.JWT_SECRET;
       console.log("secretKey",secretKey);
-      const expiresIn = '30s'; // Set your desired expiration time
+      const expiresIn = '1d'; // Set your desired expiration time
       const token = generateJwtToken({ userId: user._id }, secretKey, expiresIn);
       console.log("token>>",token);
       
@@ -72,7 +72,7 @@ export const signUp = async (req,res)=>{
       await user.save();
       res.cookie(String(user._id),token,{
         path:'/',
-        expires: new Date(Date.now() + 1000 * 30),
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         httpOnly:true,
         sameSite: 'lax'
       })
