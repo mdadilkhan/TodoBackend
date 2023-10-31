@@ -14,6 +14,7 @@ export const signUp = async (req,res)=>{
         console.log("check user existence>>",existingUser);
   
         if (existingUser) {
+          console.log("inside existance>>");
          return res.status(400).send({ message: 'Email already exist' });
         }
 
