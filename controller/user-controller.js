@@ -192,45 +192,74 @@ export const signUp = async (req,res)=>{
 //     }
 //   }
 
-export const verifyToken = (req, res, next) => {
-  const cookies = req.headers.cookie;
-  console.log("cookies", cookies);
-  let token;
+// export const verifyToken = (req, res, next) => {
 
-  if (cookies) {
-    token = cookies.split("=")[1];
-    console.log("token??", token);
-    console.log(typeof token);
-  } else {
-    return res.status(400).send({ message: 'cookies not found' });
-  }
+//   const cookies = req.headers.cookie;
+//   console.log("cookies", cookies);
+//   let token;
+
+//   if (cookies) {
+//     token = cookies.split("=")[1];
+//     console.log("token??", token);
+//     console.log(typeof token);
+//   } else {
+//     return res.status(400).send({ message: 'cookies not found' });
+//   }
 
   
 
+//   if (!token) {
+//     return res.status(400).send({ message: 'token not found' });
+//   }
+
+//   const secretKey = process.env.JWT_SECRET;
+//   console.log(secretKey);
+
+//   jwt.verify(String(token),secretKey,(error, user) => {
+//     if (error) {
+//       console.log(error);
+//       if (error.name === 'TokenExpiredError') {
+//         console.log("1st if");
+//         return res.status(401).send({ message: 'Token expired',token });
+//       } else if (error.name === 'JsonWebTokenError') {
+//         console.log("2st if");
+//         return res.status(401).send({ message: 'Invalid token',token });
+//       } else {
+//         console.log("inside else");
+//         return res.status(500).send({ message: 'Internal server error',token });
+//       }
+//     }
+
+//     req.id = user.userId;
+//     console.log("userID>>>", user.userId);
+//     next();
+//   });
+// };
+
+
+export const verifyToken = (req, res, next) => {
+  const token = req.cookies[String(req.id)]; // Assuming req.id holds the user's ID
+
   if (!token) {
-    return res.status(400).send({ message: 'token not found' });
+    return res.status(400).send({ message: 'Token not found in cookies' });
   }
 
   const secretKey = process.env.JWT_SECRET;
-  console.log(secretKey);
 
-  jwt.verify(String(token),secretKey,(error, user) => {
+  jwt.verify(token, secretKey, (error, user) => {
     if (error) {
       console.log(error);
       if (error.name === 'TokenExpiredError') {
-        console.log("1st if");
-        return res.status(401).send({ message: 'Token expired',token });
+        return res.status(401).send({ message: 'Token expired', token });
       } else if (error.name === 'JsonWebTokenError') {
-        console.log("2st if");
-        return res.status(401).send({ message: 'Invalid token',token });
+        return res.status(401).send({ message: 'Invalid token', token });
       } else {
-        console.log("inside else");
-        return res.status(500).send({ message: 'Internal server error',token });
+        return res.status(500).send({ message: 'Internal server error', token });
       }
     }
 
     req.id = user.userId;
-    console.log("userID>>>", user.userId);
+    console.log('userID>>>', user.userId);
     next();
   });
 };
