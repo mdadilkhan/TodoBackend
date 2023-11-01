@@ -243,11 +243,15 @@ export const verifyToken = (req, res, next) => {
   console.log("req>>",req);
   console.log("cookies>>",req.cookies);
   console.log("cookie>>",req.headers.cookie);
-  const token = req.cookies.authToken;
-  console.log("token>>",token);
-  if (!token) {
+
+
+  const cookies = req.headers.cookie;
+  const authToken = cookies && cookies.split('=')[1];
+
+  if (!authToken) {
     return res.status(400).send({ message: 'Token not found in cookies' });
   }
+
 
   const secretKey = process.env.JWT_SECRET;
 
