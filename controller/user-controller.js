@@ -195,6 +195,7 @@ export const signUp = async (req,res)=>{
 export const verifyToken = (req, res, next) => {
 
   console.log("req>>",req);
+  console.log("req.cookies",req.cookies);
   const cookies = req.headers.cookie;
   console.log("cookies", cookies);
   let token;
