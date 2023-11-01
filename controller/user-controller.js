@@ -240,6 +240,8 @@ export const signUp = async (req,res)=>{
 
 
 export const verifyToken = (req, res, next) => {
+  console.log("cookies>>",req.cookies);
+  console.log("cookies>>",req.headers.cookie);
   const token = req.cookies.authToken;
   console.log("token>>",token);
   if (!token) {
