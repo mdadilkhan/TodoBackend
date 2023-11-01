@@ -70,7 +70,7 @@ export const signUp = async (req,res)=>{
       user.token = token;
       console.log("added token>>",user);
       await user.save();
-      res.cookie(String(user._id),token,{
+      res.cookie('authToken',token,{
         path:'/',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         httpOnly:true,
@@ -195,11 +195,11 @@ export const signUp = async (req,res)=>{
 // export const verifyToken = (req, res, next) => {
 
 //   console.log("req>>",req);
-//   console.log("req.cookies",req.cookies);
+//   console.log("req.cookies",req.header);
 //   const cookies = req.headers.cookie;
 //   console.log("cookies", cookies);
-//   let token;
-
+//   // let token;
+//   const token = req.cookies.authToken;
 //   if (cookies) {
 //     token = cookies.split("=")[1];
 //     console.log("token??", token);
@@ -240,51 +240,31 @@ export const signUp = async (req,res)=>{
 
 
 export const verifyToken = (req, res, next) => {
-  console.log("req.cookies", req.cookies);
-
-  // Iterate over cookies to find the one that contains the JWT token
-  let token;
-  for (const cookieName in req.cookies) {
-    if (req.cookies.hasOwnProperty(cookieName) && cookieName.length === 24) {
-      // Assuming the user ID is 24 characters long (adjust if needed)
-      token = req.cookies[cookieName];
-      break;
-    }
-  }
-
-  console.log("token??", token);
-  console.log(typeof token);
-
+  const token = req.cookies.authToken;
+  console.log("token>>",token);
   if (!token) {
     return res.status(400).send({ message: 'Token not found in cookies' });
   }
 
   const secretKey = process.env.JWT_SECRET;
-  console.log(secretKey);
 
-  jwt.verify(String(token), secretKey, (error, user) => {
+  jwt.verify(token, secretKey, (error, user) => {
     if (error) {
       console.log(error);
       if (error.name === 'TokenExpiredError') {
-        console.log("1st if");
         return res.status(401).send({ message: 'Token expired', token });
       } else if (error.name === 'JsonWebTokenError') {
-        console.log("2st if");
         return res.status(401).send({ message: 'Invalid token', token });
       } else {
-        console.log("inside else");
         return res.status(500).send({ message: 'Internal server error', token });
       }
     }
 
     req.id = user.userId;
-    console.log("userID>>>", user.userId);
+    console.log('userID>>>', user.userId);
     next();
   });
 };
-
-
-
 
 
   export const getUser=async(req,res)=>{
