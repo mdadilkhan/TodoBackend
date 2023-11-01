@@ -74,7 +74,7 @@ export const signUp = async (req,res)=>{
         path:'/',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         httpOnly:true,
-        sameSite: 'lax',
+        sameSite: 'None',
         secure: true,
       })
       return res.status(200).send({ message: "Login Successful", token });
