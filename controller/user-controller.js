@@ -255,7 +255,7 @@ export const verifyToken = (req, res, next) => {
 
   const secretKey = process.env.JWT_SECRET;
 
-  jwt.verify(token, secretKey, (error, user) => {
+  jwt.verify(authToken, secretKey, (error, user) => {
     if (error) {
       console.log(error);
       if (error.name === 'TokenExpiredError') {
