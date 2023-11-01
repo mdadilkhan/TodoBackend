@@ -192,43 +192,88 @@ export const signUp = async (req,res)=>{
 //     }
 //   }
 
-export const verifyToken = (req, res, next) => {
+// export const verifyToken = (req, res, next) => {
 
-  console.log("req>>",req);
-  console.log("req.cookies",req.cookies);
-  const cookies = req.headers.cookie;
-  console.log("cookies", cookies);
-  let token;
+//   console.log("req>>",req);
+//   console.log("req.cookies",req.cookies);
+//   const cookies = req.headers.cookie;
+//   console.log("cookies", cookies);
+//   let token;
 
-  if (cookies) {
-    token = cookies.split("=")[1];
-    console.log("token??", token);
-    console.log(typeof token);
-  } else {
-    return res.status(400).send({ message: 'cookies not found' });
-  }
+//   if (cookies) {
+//     token = cookies.split("=")[1];
+//     console.log("token??", token);
+//     console.log(typeof token);
+//   } else {
+//     return res.status(400).send({ message: 'cookies not found' });
+//   }
 
   
 
+//   if (!token) {
+//     return res.status(400).send({ message: 'token not found' });
+//   }
+
+//   const secretKey = process.env.JWT_SECRET;
+//   console.log(secretKey);
+
+//   jwt.verify(String(token),secretKey,(error, user) => {
+//     if (error) {
+//       console.log(error);
+//       if (error.name === 'TokenExpiredError') {
+//         console.log("1st if");
+//         return res.status(401).send({ message: 'Token expired',token });
+//       } else if (error.name === 'JsonWebTokenError') {
+//         console.log("2st if");
+//         return res.status(401).send({ message: 'Invalid token',token });
+//       } else {
+//         console.log("inside else");
+//         return res.status(500).send({ message: 'Internal server error',token });
+//       }
+//     }
+
+//     req.id = user.userId;
+//     console.log("userID>>>", user.userId);
+//     next();
+//   });
+// };
+
+
+export const verifyToken = (req, res, next) => {
+  console.log("req.cookies", req.cookies);
+
+  // Iterate over cookies to find the one that contains the JWT token
+  let token;
+  for (const cookieName in req.cookies) {
+    if (req.cookies.hasOwnProperty(cookieName) && cookieName.length === 24) {
+      // Assuming the user ID is 24 characters long (adjust if needed)
+      token = req.cookies[cookieName];
+      break;
+    }
+  }
+
+  console.log("token??", token);
+  console.log(typeof token);
+
   if (!token) {
-    return res.status(400).send({ message: 'token not found' });
+    return res.status(400).send({ message: 'Token not found in cookies' });
   }
 
   const secretKey = process.env.JWT_SECRET;
   console.log(secretKey);
 
-  jwt.verify(String(token),secretKey,(error, user) => {
+  jwt.verify(String(token), secretKey, (error, user) => {
     if (error) {
       console.log(error);
       if (error.name === 'TokenExpiredError') {
         console.log("1st if");
-        return res.status(401).send({ message: 'Token expired',token });
+        return res.status(401).send({ message: 'Token expired', token });
       } else if (error.name === 'JsonWebTokenError') {
         console.log("2st if");
-        return res.status(401).send({ message: 'Invalid token',token });
+        return res.status(401).send({ message: 'Invalid token', token });
       } else {
         console.log("inside else");
-        return res.status(500).send({ message: 'Internal server error',token });
+        return res.status(500).send({ message: 'Internal server error', token });
       }
     }
 
@@ -237,6 +282,7 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
+
 
 
 
