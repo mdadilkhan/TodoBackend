@@ -70,7 +70,7 @@ export const signUp = async (req,res)=>{
       user.token = token;
       console.log("added token>>",user);
       await user.save();
-      res.cookie('authToken',token,{
+      res.cookie(String(user._id),token,{
         path:'/',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         httpOnly:true,
