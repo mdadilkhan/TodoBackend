@@ -193,7 +193,6 @@ export const signUp = async (req,res)=>{
 //   }
 
 export const verifyToken = (req, res, next) => {
-  console.log("req>>>",req);
   const cookies = req.headers.cookie;
   console.log("cookies", cookies);
   let token;
@@ -219,13 +218,13 @@ export const verifyToken = (req, res, next) => {
       console.log(error);
       if (error.name === 'TokenExpiredError') {
         console.log("1st if");
-        return res.status(401).send({ message: 'Token expired' });
+        return res.status(401).send({ message: 'Token expired',token });
       } else if (error.name === 'JsonWebTokenError') {
         console.log("2st if");
-        return res.status(401).send({ message: 'Invalid token' });
+        return res.status(401).send({ message: 'Invalid token',token });
       } else {
         console.log("inside else");
-        return res.status(500).send({ message: 'Internal server error' });
+        return res.status(500).send({ message: 'Internal server error',token });
       }
     }
 
