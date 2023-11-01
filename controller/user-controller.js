@@ -74,7 +74,7 @@ export const signUp = async (req,res)=>{
         path:'/',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         httpOnly:true,
-        sameSite: 'None',
+        sameSite: 'lax',
         secure: true,
       })
       return res.status(200).send({ message: "Login Successful", token });
@@ -193,7 +193,7 @@ export const signUp = async (req,res)=>{
 //   }
 
 export const verifyToken = (req, res, next) => {
-
+  console.log();
   const cookies = req.headers.cookie;
   console.log("cookies", cookies);
   let token;
