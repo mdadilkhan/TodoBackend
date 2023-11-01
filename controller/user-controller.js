@@ -216,12 +216,15 @@ export const verifyToken = (req, res, next) => {
 
   jwt.verify(String(token), secretKey, (error, user) => {
     if (error) {
-      // console.log(error);
+      console.log(error);
       if (error.name === 'TokenExpiredError') {
+        console.log("1st if");
         return res.status(401).send({ message: 'Token expired' });
       } else if (error.name === 'JsonWebTokenError') {
+        console.log("2st if");
         return res.status(401).send({ message: 'Invalid token' });
       } else {
+        console.log("inside else");
         return res.status(500).send({ message: 'Internal server error' });
       }
     }
