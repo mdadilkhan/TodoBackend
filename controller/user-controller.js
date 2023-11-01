@@ -199,12 +199,13 @@ export const verifyToken = (req, res, next) => {
 
   if (cookies) {
     token = cookies.split("=")[1];
+    console.log("token??", token);
+    console.log(typeof token);
   } else {
     return res.status(400).send({ message: 'cookies not found' });
   }
 
-  console.log("cook>>", cookies);
-  console.log("token>>", token);
+  
 
   if (!token) {
     return res.status(400).send({ message: 'token not found' });
@@ -213,7 +214,7 @@ export const verifyToken = (req, res, next) => {
   const secretKey = process.env.JWT_SECRET;
   console.log(secretKey);
 
-  jwt.verify(String(token), secretKey, (error, user) => {
+  jwt.verify(String(token),secretKey,(error, user) => {
     if (error) {
       console.log(error);
       if (error.name === 'TokenExpiredError') {
