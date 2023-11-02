@@ -6,16 +6,16 @@ import cors from 'cors'
 import bodyParser from 'body-parser';
 
 import cookieParser from 'cookie-parser';
-const corsOptions = {
-    origin: 'https://advacnetodoapp.web.app',
-    credentials: true,
-  };
+// const corsOptions = {
+//     origin: 'https://advacnetodoapp.web.app',
+//     credentials: true,
+//   };
 
 env.config()
 const app=express();
 
 app.use(cookieParser())
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(bodyParser.json({extended:true}));
 app.use(bodyParser.urlencoded({extended:true}));
 
