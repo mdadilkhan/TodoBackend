@@ -246,6 +246,7 @@ export const login = async (req, res) => {
 // if you dont want to implement cookie use this jwt authentication only 
 //this is using callback function
 export const verifyToken = (req, res, next) => {
+  console.log("headers>>>",req.headers);
   const header = req.headers['authorization'];
   const token = header.split(" ")[1];
   console.log(header);
