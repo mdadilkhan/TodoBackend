@@ -247,23 +247,28 @@ export const login = async (req, res) => {
 export const refreshToken = async (req, res, next) => {
   const header = req.headers['authorization'];
   const expiredToken = header.split(" ")[1];
-
+  console.log("111");
   if (!expiredToken) {
+    console.log("222");
     return res.status(400).send({ message: 'Token not found' });
   }
 
   const secretKey = process.env.JWT_SECRET;
-
+  console.log("333");
   jwt.verify(expiredToken, secretKey, async (error, user) => {
+    console.log("444");
     if (error) {
-      console.log(error);
+      console.log("555");
+      console.log(error); 
       if (error.name === 'TokenExpiredError') {
+        console.log("666");
         // Token has expired, generate a new token and save it to the user collection
         // const newToken = jwt.sign({ userId: user.userId }, secretKey, { expiresIn: '30s' });
         const expiresIn = '30s'; // Set your desired expiration time
         const newToken = generateJwtToken({ userId: user._id }, secretKey, expiresIn);
 
         try {
+          console.log("777");
           // Save the new token to the user collection (Assuming you have a User model with a field for the token)
           const updatedUser = await User.findByIdAndUpdate(
             user.userId,
@@ -272,6 +277,7 @@ export const refreshToken = async (req, res, next) => {
           );
 
           if (!updatedUser) {
+            console.log("888");
             return res.status(404).send({ message: 'User not found' });
           }
         } catch (error) {
@@ -280,15 +286,19 @@ export const refreshToken = async (req, res, next) => {
         }
 
         // Set the new token in the response header
+        console.log("999");
         res.setHeader('Authorization', `Bearer ${newToken}`);
         req.headers['authorization'] = `Bearer ${newToken}`; // Update the request header with the new token
         next();
       } else if (error.name === 'JsonWebTokenError') {
+        console.log("10");
         res.status(401).send({ message: 'Invalid token' });
       } else {
+        console.log("11");
         res.status(500).send({ message: 'Internal server error' });
       }
     } else {
+      console.log("12");
       res.status(400).send({ message: 'Unexpected error' });
     }
   });
