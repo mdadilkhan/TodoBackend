@@ -3,7 +3,8 @@ import {
      signUp,
      login, 
      verifyToken,
-     getUser 
+     getUser,
+     refreshToken
     } from '../controller/user-controller.js';
 
 
