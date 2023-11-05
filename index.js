@@ -10,10 +10,10 @@ import cookieParser from 'cookie-parser';
 //     origin: 'https://advacnetodoapp.web.app',
 //     credentials: true,
 //   };
-
-env.config()
+ 
+env.config() 
 const app=express();
-
+   
 app.use(cookieParser())
 app.use(cors())
 app.use(bodyParser.json({extended:true}));

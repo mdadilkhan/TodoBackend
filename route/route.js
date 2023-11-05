@@ -16,5 +16,6 @@ import {
  router.post('/register',signUp);
  router.post('/login',login)
  router.get('/user',verifyToken,getUser);
+ router.get('/refreshToken',refreshToken,verifyToken,getUser);
 
  export default router;

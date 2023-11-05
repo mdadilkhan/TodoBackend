@@ -224,7 +224,7 @@ export const login = async (req, res) => {
 
     const secretKey = process.env.JWT_SECRET;
     console.log("secretKey", secretKey);
-    const expiresIn = '1d'; // Set your desired expiration time
+    const expiresIn = '30s'; // Set your desired expiration time
     const token = generateJwtToken({ userId: user._id }, secretKey, expiresIn);
     console.log("token>>", token);
 
@@ -239,6 +239,59 @@ export const login = async (req, res) => {
     console.log(error);
     res.status(500).send({ message: "Internal Server Error" });
   }
+};
+
+
+
+
+export const refreshToken = async (req, res, next) => {
+  const header = req.headers['authorization'];
+  const expiredToken = header.split(" ")[1];
+
+  if (!expiredToken) {
+    return res.status(400).send({ message: 'Token not found' });
+  }
+
+  const secretKey = process.env.JWT_SECRET;
+
+  jwt.verify(expiredToken, secretKey, async (error, user) => {
+    if (error) {
+      console.log(error);
+      if (error.name === 'TokenExpiredError') {
+        // Token has expired, generate a new token and save it to the user collection
+        // const newToken = jwt.sign({ userId: user.userId }, secretKey, { expiresIn: '30s' });
+        const expiresIn = '30s'; // Set your desired expiration time
+        const newToken = generateJwtToken({ userId: user._id }, secretKey, expiresIn);
+
+        try {
+          // Save the new token to the user collection (Assuming you have a User model with a field for the token)
+          const updatedUser = await User.findByIdAndUpdate(
+            user.userId,
+            { $set: { token: newToken } },
+            { new: true }
+          );
+
+          if (!updatedUser) {
+            return res.status(404).send({ message: 'User not found' });
+          }
+        } catch (error) {
+          console.log(error);
+          return res.status(500).send({ message: 'Internal server error' });
+        }
+
+        // Set the new token in the response header
+        res.setHeader('Authorization', `Bearer ${newToken}`);
+        req.headers['authorization'] = `Bearer ${newToken}`; // Update the request header with the new token
+        next();
+      } else if (error.name === 'JsonWebTokenError') {
+        res.status(401).send({ message: 'Invalid token' });
+      } else {
+        res.status(500).send({ message: 'Internal server error' });
+      }
+    } else {
+      res.status(400).send({ message: 'Unexpected error' });
+    }
+  });
 };
 
 
@@ -275,8 +328,6 @@ export const verifyToken = (req, res, next) => {
     }
   });
 };
-
-
 
   export const getUser=async(req,res)=>{
     const userId=req.id;
